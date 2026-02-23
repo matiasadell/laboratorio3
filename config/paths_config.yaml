@@ -1,0 +1,19 @@
+catalog: "laboratorio3"
+
+schemas:
+  raw: "rdz"    
+  curated: "cdz"  
+  feature_store: "features" 
+
+tables:
+  rdz:
+    df_raw: "raw_fraud_data"
+  cdz:
+    df_curated: "fraud_transactions"
+  features:
+    train_set: "train_df"
+    test_set: "test_df"
+    feature_inference_set: "features_inferencia" 
+
+mlflow:
+  experiment_prefix: "Fraude_Experiment_Sklearn"

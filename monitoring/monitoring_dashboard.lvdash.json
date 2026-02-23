@@ -1,0 +1,408 @@
+{
+  "datasets": [
+    {
+      "name": "3c095204",
+      "displayName": "monitoring_drift_history",
+      "queryLines": [
+        "SELECT * FROM laboratorio3.results.monitoring_drift_history"
+      ]
+    },
+    {
+      "name": "1abe12d3",
+      "displayName": "predictions",
+      "queryLines": [
+        "SELECT * FROM laboratorio3.results.predictions"
+      ]
+    },
+    {
+      "name": "e2c2c032",
+      "displayName": "train_df",
+      "queryLines": [
+        "SELECT * FROM laboratorio3.features.train_df"
+      ]
+    },
+    {
+      "name": "16ebecaf",
+      "displayName": "features_inference_prediction",
+      "queryLines": [
+        "SELECT \r\n",
+        "    f.Transaction_Amount, \r\n",
+        "    f.Account_Balance, \r\n",
+        "    p.inference_timestamp \r\n",
+        "FROM laboratorio3.features.features_inferencia f\r\n",
+        "JOIN laboratorio3.results.predictions p ON f.Transaction_ID = p.Transaction_ID\r\n",
+        "WHERE p.inference_timestamp >= date_sub(current_timestamp(), 7)"
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "name": "85192d13",
+      "displayName": "Untitled page",
+      "layout": [
+        {
+          "widget": {
+            "name": "a6a61593",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "3c095204",
+                  "fields": [
+                    {
+                      "name": "count(status)",
+                      "expression": "COUNT(`status`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "pie",
+              "encodings": {
+                "angle": {
+                  "fieldName": "count(status)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Estable / No Estable"
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 6,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "promedio-psi-score",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "3c095204",
+                  "fields": [
+                    {
+                      "name": "avg(psi_score)",
+                      "expression": "AVG(`psi_score`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Promedio PSI Score"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "avg(psi_score)"
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 0,
+            "width": 6,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "feature",
+            "queries": [
+              {
+                "name": "dashboards/01f10f51b71a1610baef031ae5860c55/datasets/01f10f51d49a105d99f549777b406462_feature",
+                "query": {
+                  "datasetName": "3c095204",
+                  "fields": [
+                    {
+                      "name": "feature",
+                      "expression": "`feature`"
+                    },
+                    {
+                      "name": "feature_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Features"
+              },
+              "widgetType": "filter-single-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "feature",
+                    "queryName": "dashboards/01f10f51b71a1610baef031ae5860c55/datasets/01f10f51d49a105d99f549777b406462_feature"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 2,
+            "width": 6,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "4262c44b",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "e2c2c032",
+                  "fields": [
+                    {
+                      "name": "bin(Account_Balance, binWidth=10000)",
+                      "expression": "BIN_FLOOR(`Account_Balance`, 10000)"
+                    },
+                    {
+                      "name": "count(Account_Balance)",
+                      "expression": "COUNT(`Account_Balance`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "histogram",
+              "encodings": {
+                "x": {
+                  "fieldName": "bin(Account_Balance, binWidth=10000)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "y": {
+                  "fieldName": "count(Account_Balance)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 4,
+            "width": 6,
+            "height": 4
+          }
+        },
+        {
+          "widget": {
+            "name": "2f293625",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "16ebecaf",
+                  "fields": [
+                    {
+                      "name": "bin(Account_Balance, binWidth=9998)",
+                      "expression": "BIN_FLOOR(`Account_Balance`, 9998)"
+                    },
+                    {
+                      "name": "count(*)",
+                      "expression": "COUNT(`*`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "histogram",
+              "encodings": {
+                "x": {
+                  "fieldName": "bin(Account_Balance, binWidth=9998)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "y": {
+                  "fieldName": "count(*)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 4,
+            "width": 6,
+            "height": 4
+          }
+        },
+        {
+          "widget": {
+            "name": "b8c233bb",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "e2c2c032",
+                  "fields": [
+                    {
+                      "name": "bin(Transaction_Amount, binWidth=10000)",
+                      "expression": "BIN_FLOOR(`Transaction_Amount`, 10000)"
+                    },
+                    {
+                      "name": "count(*)",
+                      "expression": "COUNT(`*`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "histogram",
+              "encodings": {
+                "x": {
+                  "fieldName": "bin(Transaction_Amount, binWidth=10000)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "y": {
+                  "fieldName": "count(*)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 8,
+            "width": 6,
+            "height": 4
+          }
+        },
+        {
+          "widget": {
+            "name": "b1aea5d9",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "16ebecaf",
+                  "fields": [
+                    {
+                      "name": "bin(Transaction_Amount, binWidth=10000)",
+                      "expression": "BIN_FLOOR(`Transaction_Amount`, 10000)"
+                    },
+                    {
+                      "name": "count(*)",
+                      "expression": "COUNT(`*`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "histogram",
+              "encodings": {
+                "x": {
+                  "fieldName": "bin(Transaction_Amount, binWidth=10000)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "y": {
+                  "fieldName": "count(*)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 8,
+            "width": 6,
+            "height": 4
+          }
+        },
+        {
+          "widget": {
+            "name": "2e271ae3",
+            "multilineTextboxSpec": {
+              "lines": [
+                "TRAIN FEATURES DISTRIBUTION"
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 3,
+            "width": 6,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "6e0aa1ec",
+            "multilineTextboxSpec": {
+              "lines": [
+                "INFERENCE FEATURES DISTRIBUTION (7 days)"
+              ]
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 3,
+            "width": 6,
+            "height": 1
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    },
+    {
+      "name": "f5cd8aa5",
+      "displayName": "Global Filters",
+      "pageType": "PAGE_TYPE_GLOBAL_FILTERS",
+      "layoutVersion": "GRID_V1"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    },
+    "applyModeEnabled": false
+  }
+}
