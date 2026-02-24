@@ -15,6 +15,10 @@ model_params:
   model_name: "fraud_model_rf_sklearn"
   alias: "inference"
 
+evaluation:
+  metric_name: "auc_roc"
+  threshold: 0.5
+
 serving_params:
   endpoint_name: "fraud_detection_endpoint_sklearn"
   workload_size: "SMALL"
